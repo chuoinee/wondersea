@@ -1,0 +1,51 @@
+@startuml
+title UC-007: Quản lý kho - Nhập nguyên liệu
+
+actor "Quản lý" as Manager
+participant "App" as App
+participant "Inventory Controller" as Inv
+database "Database" as DB
+
+Manager -> App: 1. Mở "Quản lý kho"
+activate App
+App -> DB: 2. Load tồn kho
+activate DB
+DB --> App: Danh sách NVL
+deactivate DB
+App --> Manager: Tổng quan
+
+Manager -> App: 3. "Nhập NVL"
+App --> Manager: 4. Form
+
+Manager -> App: 5. Điền (NVL, số lượng, giá, HSD)
+Manager -> App: 6. Lưu
+
+App -> Inv: 7. Validate
+activate Inv
+
+alt Hợp lệ
+    Inv -> Inv: 8. Tạo mã phiếu
+    
+    Inv -> DB: 9. Lưu phiếu
+    activate DB
+    deactivate DB
+    
+    Inv -> DB: 10. Cập nhật tồn (+)
+    activate DB
+    deactivate DB
+    
+    Inv -> DB: 11. Ghi log
+    activate DB
+    deactivate DB
+    
+    Inv --> App: 12. Thành công
+    deactivate Inv
+    App --> Manager: "Nhập thành công"
+else Lỗi
+    Inv --> App: Lỗi
+    App --> Manager: Hiển thị lỗi
+end
+
+deactivate App
+
+@enduml

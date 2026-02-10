@@ -1,0 +1,50 @@
+@startuml
+title UC-002: Check-out (Chấm công ra ca)
+
+actor "Nhân viên" as Staff
+participant "App Interface" as App
+participant "Biometric Scanner" as Bio
+participant "System Controller" as Sys
+database "Database" as DB
+participant "BIOS System" as BIOS
+
+Staff -> App: 1. Mở màn hình chấm công
+activate App
+App -> DB: 1.1. Lấy thông tin check-in
+activate DB
+DB --> App: 1.2. Trả về thời gian check-in
+deactivate DB
+App --> Staff: 2. Hiển thị "Check-out" + giờ làm hiện tại
+
+Staff -> App: 3. Nhấn "Check-out"
+App -> Bio: 4. Kích hoạt máy quét sinh trắc
+activate Bio
+Bio --> Staff: 5. Yêu cầu quét vân tay/khuôn mặt
+
+Staff -> Bio: 6. Đặt ngón tay/quét khuôn mặt
+Bio -> Sys: 7. Gửi dữ liệu sinh trắc
+activate Sys
+Sys -> DB: 8. Xác thực thông tin nhân viên
+activate DB
+DB --> Sys: 9. Trả về thông tin + thời gian check-in
+deactivate DB
+
+Sys -> Sys: 10. Tính tổng giờ làm việc
+
+Sys -> DB: 11. Lưu bản ghi check-out
+activate DB
+DB --> Sys: 12. Xác nhận lưu thành công
+deactivate DB
+
+Sys -> BIOS: 13. Đồng bộ dữ liệu check-out
+activate BIOS
+BIOS --> Sys: 14. Xác nhận đồng bộ
+deactivate BIOS
+
+Sys -> App: 15. Gửi kết quả + tổng giờ
+deactivate Sys
+App --> Staff: 16. Hiển thị "Check-out thành công"\\n+ Tổng giờ làm
+deactivate Bio
+deactivate App
+
+@enduml

@@ -1,0 +1,62 @@
+@startuml
+title UC-003: Chọn món (Order Selection)
+
+actor "Người dùng" as User
+participant "App Interface" as App
+participant "Menu Controller" as Menu
+participant "Order Controller" as Order
+database "Database" as DB
+participant "BIOS System" as BIOS
+
+User -> App: 1. Mở màn hình chọn món
+activate App
+App --> User: 2. Yêu cầu chọn vị trí bàn
+
+User -> App: 3. Chọn số bàn
+App -> Menu: 4. Load menu
+activate Menu
+Menu -> DB: 4.1. Lấy menu
+activate DB
+DB --> Menu: 4.2. Trả về menu + giá
+deactivate DB
+Menu --> App: 5. Hiển thị menu
+
+User -> App: 6. Chọn danh mục
+App --> User: 7. Danh sách món
+
+User -> App: 8. Nhấn món
+App --> User: 9. Popup tùy chỉnh
+
+User -> App: 10. Chọn tùy chỉnh + số lượng
+User -> App: 11. Nhấn "Thêm vào đơn"
+
+App -> Menu: 12. Tính giá món
+Menu --> App: 12.1. Giá (gốc + topping)
+
+App -> Order: 13. Thêm món vào đơn tạm
+activate Order
+Order --> App: 14. Cập nhật danh sách
+
+App --> User: Hiển thị món đã chọn
+
+User -> App: 15. Nhấn "Hoàn tất"
+
+App -> Order: 16. Tạo đơn chính thức
+Order -> DB: 17. Lưu đơn hàng
+activate DB
+DB --> Order: 17.1. Xác nhận
+deactivate DB
+
+Order -> BIOS: 18. Gửi thông tin món
+activate BIOS
+BIOS --> Order: 19. Xác nhận
+deactivate BIOS
+
+Order --> App: 20. Kết quả
+deactivate Order
+deactivate Menu
+
+App --> User: 21. Xác nhận đơn + Tổng tiền
+deactivate App
+
+@enduml

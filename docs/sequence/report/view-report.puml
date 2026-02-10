@@ -1,0 +1,53 @@
+@startuml
+title UC-008: Xem báo cáo
+
+actor "Quản lý" as Manager
+participant "App" as App
+participant "Report Controller" as Report
+database "Database" as DB
+participant "Chart Library" as Chart
+participant "Export Service" as Export
+
+Manager -> App: 1. Mở "Báo cáo"
+activate App
+App -> DB: 2. Load dashboard
+activate DB
+DB --> App: Dữ liệu tổng quan
+deactivate DB
+App --> Manager: Dashboard
+
+Manager -> App: 3. Chọn loại BC
+Manager -> App: 4. Chọn thời gian
+Manager -> App: 5. "Xem báo cáo"
+
+App -> Report: 6. Query
+activate Report
+Report -> DB: 6.1. Query dữ liệu
+activate DB
+DB --> Report: 6.2. Raw data
+deactivate DB
+
+Report -> Report: 7. Tính chỉ số
+
+Report -> Chart: 8. Render biểu đồ
+activate Chart
+Chart --> Report: 8.1. Charts
+deactivate Chart
+
+Report --> App: 9. Dữ liệu + Biểu đồ
+deactivate Report
+
+App --> Manager: 10. Hiển thị báo cáo
+
+opt Xuất
+    Manager -> App: 11. Xuất PDF/Excel
+    App -> Export: Tạo file
+    activate Export
+    Export --> App: File
+    deactivate Export
+    App --> Manager: Download
+end
+
+deactivate App
+
+@enduml

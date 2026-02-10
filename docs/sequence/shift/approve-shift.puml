@@ -1,0 +1,43 @@
+@startuml
+title UC-006: Duyệt đổi ca
+
+actor "Trưởng ca" as Leader
+participant "App" as App
+database "Database" as DB
+participant "Notification" as Notify
+
+Leader -> App: 1. Mở "Duyệt đổi ca"
+activate App
+App -> DB: 2. Lấy yêu cầu chờ
+activate DB
+DB --> App: Danh sách
+deactivate DB
+App --> Leader: Hiển thị
+
+Leader -> App: 3. Nhấn yêu cầu
+App --> Leader: 4. Chi tiết
+
+Leader -> Leader: 5. Kiểm tra
+
+Leader -> App: 6. Duyệt/Từ chối
+
+alt Duyệt
+    App -> DB: 7. Cập nhật lịch
+    activate DB
+    deactivate DB
+else Từ chối
+    Leader -> App: 8. Lý do
+end
+
+App -> DB: 9. Lưu quyết định
+activate DB
+deactivate DB
+
+App -> Notify: 10. Thông báo NV
+activate Notify
+deactivate Notify
+
+App --> Leader: 11. Hoàn thành
+deactivate App
+
+@enduml

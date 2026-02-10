@@ -1,0 +1,71 @@
+@startuml
+title UC-004: Thanh toán (Payment)
+
+actor "Người dùng" as User
+participant "App" as App
+participant "Payment Controller" as Pay
+participant "BIOS" as BIOS
+participant "Payment Gateway" as Gateway
+database "Database" as DB
+participant "Printer" as Printer
+
+User -> App: 1. Xác nhận thanh toán
+activate App
+App --> User: 2. Chi tiết đơn
+
+App -> BIOS: 3. Yêu cầu tính tiền
+activate BIOS
+BIOS --> App: 4. Tổng tiền
+deactivate BIOS
+
+App --> User: 5. Phương thức thanh toán
+
+User -> App: 6. Chọn (Tiền mặt/Online)
+
+alt Online
+    App -> Pay: 7a. Tạo giao dịch
+    activate Pay
+    Pay -> Gateway: 7b. Tạo QR
+    activate Gateway
+    Gateway --> App: 7c. QR code
+    App --> User: Hiển thị QR
+    User -> Gateway: Quét & thanh toán
+    Gateway --> Pay: 8. Xác nhận
+    deactivate Gateway
+else Tiền mặt
+    User -> App: 7. Tiền đưa
+    App -> Pay: 7a. Tính thừa
+    activate Pay
+    Pay --> App: 7b. Tiền thừa
+    App --> User: Hiển thị tiền thừa
+end
+
+Pay -> DB: 9. Tạo hóa đơn
+activate DB
+DB --> Pay: 9.1. Mã HĐ
+deactivate DB
+
+Pay -> DB: 10. Lưu giao dịch
+activate DB
+deactivate DB
+
+Pay -> BIOS: 11. Gửi dữ liệu
+activate BIOS
+deactivate BIOS
+deactivate Pay
+
+App --> User: 15. In hóa đơn?
+
+alt In
+    User -> App: Có
+    App -> Printer: 16. In
+    activate Printer
+    deactivate Printer
+else Không
+    App -> App: 17. Email/SMS
+end
+
+App --> User: 18. "Thành công!"
+deactivate App
+
+@enduml

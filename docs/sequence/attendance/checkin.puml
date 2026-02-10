@@ -1,0 +1,44 @@
+@startuml
+title UC-001: Check-in (Chấm công vào ca)
+
+actor "Nhân viên" as Staff
+participant "App Interface" as App
+participant "Biometric Scanner" as Bio
+participant "System Controller" as Sys
+database "Database" as DB
+participant "BIOS System" as BIOS
+
+Staff -> App: 1. Mở màn hình chấm công
+activate App
+App --> Staff: 2. Hiển thị nút "Check-in"
+
+Staff -> App: 3. Nhấn "Check-in"
+App -> Bio: 4. Kích hoạt máy quét sinh trắc
+activate Bio
+Bio --> Staff: 5. Yêu cầu quét vân tay/khuôn mặt
+
+Staff -> Bio: 6. Đặt ngón tay/quét khuôn mặt
+Bio -> Sys: 7. Gửi dữ liệu sinh trắc
+activate Sys
+Sys -> DB: 8. Xác thực thông tin nhân viên
+activate DB
+DB --> Sys: 9. Trả về thông tin nhân viên
+deactivate DB
+
+Sys -> DB: 10. Lưu bản ghi chấm công
+activate DB
+DB --> Sys: 11. Xác nhận lưu thành công
+deactivate DB
+
+Sys -> BIOS: 12. Đồng bộ dữ liệu chấm công
+activate BIOS
+BIOS --> Sys: 13. Xác nhận đồng bộ
+deactivate BIOS
+
+Sys -> App: 14. Gửi kết quả check-in
+deactivate Sys
+App --> Staff: 15. Hiển thị "Check-in thành công"
+deactivate Bio
+deactivate App
+
+@enduml

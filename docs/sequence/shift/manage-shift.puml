@@ -1,0 +1,49 @@
+@startuml
+title UC-005: Quản lý ca làm việc
+
+actor "Quản lý" as Manager
+participant "App" as App
+participant "Shift Controller" as Shift
+database "Database" as DB
+participant "Notification" as Notify
+
+Manager -> App: 1. Mở quản lý ca
+activate App
+App -> DB: 2. Load lịch
+activate DB
+DB --> App: 2.1. Lịch hiện tại
+deactivate DB
+App --> Manager: 3. Hiển thị calendar
+
+Manager -> App: 4. "Tạo ca mới"
+App --> Manager: 5. Form
+
+Manager -> App: 6. Điền + Lưu
+App -> Shift: 7. Kiểm tra xung đột
+activate Shift
+Shift -> DB: 7.1. Query ca
+activate DB
+DB --> Shift: 7.2. Danh sách
+deactivate DB
+
+Shift -> Shift: Kiểm tra
+
+alt Không xung đột
+    Shift -> DB: 8. Lưu ca
+    activate DB
+    deactivate DB
+    
+    Shift -> Notify: 9. Gửi thông báo
+    activate Notify
+    deactivate Notify
+    
+    Shift --> App: 10. Cập nhật
+    deactivate Shift
+    App --> Manager: 11. Thành công
+else Xung đột
+    Shift --> App: Lỗi
+    App --> Manager: Hiển thị lỗi
+end
+
+deactivate App
+@enduml
