@@ -14,3 +14,14 @@ và báo cáo vận hành.
 - Chấm công
 - Quản lý kho
 - Báo cáo cơ bản
+
+# Sequence Diagrams
+
+## Attendance
+![Checkin](docs/sequence/attendance/checkin.png)
+![Checkout](docs/sequence/attendance/checkout.png)
+
+## Order
+![Select Food](docs/sequence/order/select-food.png)
+![Payment](docs/sequence/order/payment.png)
+
